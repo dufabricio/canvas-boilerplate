@@ -109,8 +109,8 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 var mouse = {
-    x: innerWidth / 2,
-    y: innerHeight / 2
+    x: 10,
+    y: 10
 
     // Event Listeners
 };addEventListener('mousemove', function (event) {
@@ -155,19 +155,31 @@ function getDistance(obj1, obj2) {
 // Implementation
 var circle1 = void 0;
 var circle2 = void 0;
+
 function init() {
     circle1 = new Sprite(canvas.width / 2, canvas.height / 2, 50, 'black');
-    circle2 = new Sprite(undefined, undefined, 50, 'red');
+    circle2 = new Sprite(10, 10, 50, 'red');
 }
+
+var status = document.getElementById("status");
 
 // Animation Loop
 function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    circle1.update();
+    if (getDistance(circle1, circle2) < circle1.radius + circle2.radius) {
+        circle1.color = 'red';
+        status.innerHTML = "Collision Detected !";
+    } else {
+        circle1.color = 'black';
+        status.innerHTML = "";
+    }
+
     circle2.x = mouse.x;
     circle2.y = mouse.y;
+
+    circle1.update();
     circle2.update();
 }
 
