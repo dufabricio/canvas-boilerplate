@@ -96,95 +96,140 @@
 "use strict";
 
 
+var _sample = __webpack_require__(/*! ./sample1.js */ "./src/js/sample1.js");
+
+var _sample2 = _interopRequireDefault(_sample);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var loadSample = function loadSample(sampleName) {
+    var samples = document.querySelectorAll('canvas');
+    samples.forEach(function (sample) {
+        if (sample.getAttribute('class') === sampleName) {
+            sample.style.display = 'block';
+        } else {
+            sample.style.display = 'none';
+        }
+    });
+};
+
+document.querySelectorAll('ul.menu li').forEach(function (menuItem) {
+    menuItem.addEventListener("click", function (event) {
+        loadSample(menuItem.getAttribute("class"));
+    });
+});
+
+/***/ }),
+
+/***/ "./src/js/sample1.js":
+/*!***************************!*\
+  !*** ./src/js/sample1.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _utils = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
 
 var _utils2 = _interopRequireDefault(_utils);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var canvas = document.querySelector('canvas');
-var c = canvas.getContext('2d');
+var sample1 = function sample1() {
+        var canvas = document.querySelector('canvas.sample1');
+        if (canvas) {
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+                // Objects
+                var Sprite = function Sprite(x, y, radius, color) {
+                        this.x = x;
+                        this.y = y;
+                        this.radius = radius;
+                        this.color = color;
+                };
 
-var mouse = {
-    x: 10,
-    y: 10
+                // Collision Detect
+                var getDistance = function getDistance(obj1, obj2) {
+                        var xDistance = obj2.x - obj1.x;
+                        var yDistance = obj2.y - obj1.y;
+                        return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+                };
 
-    // Event Listeners
-};addEventListener('mousemove', function (event) {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-});
+                // Implementation
 
-addEventListener('resize', function () {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
 
-    init();
-});
+                var init = function init() {
+                        circle1 = new Sprite(canvas.width / 2, canvas.height / 2, 50, 'black');
+                        circle2 = new Sprite(10, 10, 50, 'red');
+                };
 
-// Objects
-function Sprite(x, y, radius, color) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
-}
+                // Animation Loop
+                var animate = function animate() {
 
-Sprite.prototype.draw = function () {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
-    c.closePath();
+                        requestAnimationFrame(animate);
+                        c.clearRect(0, 0, canvas.width, canvas.height);
+
+                        if (canvas.style.display == 'block') {
+
+                                if (getDistance(circle1, circle2) < circle1.radius + circle2.radius) {
+                                        circle1.color = 'red';
+                                        status.innerHTML = "Collision Detected !";
+                                } else {
+                                        circle1.color = 'black';
+                                        status.innerHTML = "";
+                                }
+
+                                circle2.x = mouse.x;
+                                circle2.y = mouse.y;
+
+                                circle1.update();
+                                circle2.update();
+                        }
+                };
+
+                var c = canvas.getContext('2d');
+
+                canvas.width = innerWidth;
+                canvas.height = innerHeight;
+
+                var mouse = {
+                        x: 10,
+                        y: 10
+
+                        // Event Listeners
+                };addEventListener('mousemove', function (event) {
+                        mouse.x = event.clientX;
+                        mouse.y = event.clientY;
+                });
+
+                addEventListener('resize', function () {
+                        canvas.width = innerWidth;
+                        canvas.height = innerHeight;
+
+                        init();
+                });
+
+                Sprite.prototype.draw = function () {
+                        c.beginPath();
+                        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                        c.fillStyle = this.color;
+                        c.fill();
+                        c.closePath();
+                };
+
+                Sprite.prototype.update = function () {
+                        this.draw();
+                };var circle1 = void 0;
+                var circle2 = void 0;
+
+                var status = document.getElementById("status");
+
+                init();
+                animate();
+        }
 };
-
-Sprite.prototype.update = function () {
-    this.draw();
-};
-
-// Collision Detect
-function getDistance(obj1, obj2) {
-    var xDistance = obj2.x - obj1.x;
-    var yDistance = obj2.y - obj1.y;
-    return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-}
-
-// Implementation
-var circle1 = void 0;
-var circle2 = void 0;
-
-function init() {
-    circle1 = new Sprite(canvas.width / 2, canvas.height / 2, 50, 'black');
-    circle2 = new Sprite(10, 10, 50, 'red');
-}
-
-var status = document.getElementById("status");
-
-// Animation Loop
-function animate() {
-    requestAnimationFrame(animate);
-    c.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (getDistance(circle1, circle2) < circle1.radius + circle2.radius) {
-        circle1.color = 'red';
-        status.innerHTML = "Collision Detected !";
-    } else {
-        circle1.color = 'black';
-        status.innerHTML = "";
-    }
-
-    circle2.x = mouse.x;
-    circle2.y = mouse.y;
-
-    circle1.update();
-    circle2.update();
-}
-
-init();
-animate();
+sample1();
 
 /***/ }),
 

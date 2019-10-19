@@ -10,12 +10,38 @@
       .status {
         position:absolute;
         right: 20px;
-        top: 20px;
+        top: 50px;
       }
+      ul.menu {
+         background: #555;
+         padding: 0px;
+         margin: 0px;
+         display: block;
+         width: 100%;
+      }
+      .menu li{
+         background: #555;
+         color: #FFF;
+         cursor: pointer;
+         margin: 0px;
+         padding: 10px;
+         display: inline-block;
+      }
+      .menu li:hover{
+         background-color: #777;
+      }
+
     </style>
   </head>
   <body>
+    <ul class="menu">
+       <li class='sample1')>Collision Detection - Simple</li>
+       <li class='sample2')>Collision Detection - Particles</li>
+    </ul> 
     <span id="status" class="status"></span>
-    <canvas></canvas>
+    <canvas class="sample1" style="display:none">
+    </canvas>
+    <canvas class="sample2" style="display:none">
+    </canvas>
   </body>
 </html>
