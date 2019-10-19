@@ -11,8 +11,6 @@ const mouse = {
     y: innerHeight / 2
 }
 
-const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
-
 // Event Listeners
 addEventListener('mousemove', event => {
     mouse.x = event.clientX
@@ -27,14 +25,14 @@ addEventListener('resize', () => {
 })
 
 // Objects
-function Object(x, y, radius, color) {
+function Sprite(x, y, radius, color) {
     this.x = x
     this.y = y
     this.radius = radius
     this.color = color
 }
 
-Object.prototype.draw = function() {
+Sprite.prototype.draw = function() {
     c.beginPath()
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
     c.fillStyle = this.color
@@ -42,18 +40,23 @@ Object.prototype.draw = function() {
     c.closePath()
 }
 
-Object.prototype.update = function() {
+Sprite.prototype.update = function() {
     this.draw()
 }
 
-// Implementation
-let objects
-function init() {
-    objects = []
+// Collision Detect
+function getDistance(obj1,obj2){
+    let xDistance = obj2.x - obj1.x;
+    let yDistance = obj2.y - obj1.y;
+    return Math.sqrt(Math.pow(xDistance,2) + Math.pow(yDistance, 2));
+}
 
-    for (let i = 0; i < 400; i++) {
-        // objects.push()
-    }
+// Implementation
+let circle1;
+let circle2;
+function init() {
+    circle1 = new Sprite(canvas.width/2,canvas.height/2,50,'black');
+    circle2 = new Sprite(undefined,undefined,50,'red');
 }
 
 // Animation Loop
@@ -61,10 +64,10 @@ function animate() {
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
 
-    c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y)
-    // objects.forEach(object => {
-    //  object.update()
-    // })
+    circle1.update();
+    circle2.x = mouse.x;
+    circle2.y = mouse.y;
+    circle2.update();
 }
 
 init()
