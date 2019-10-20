@@ -1,5 +1,6 @@
 import Sample1 from './sample1.js'
 import Sample2 from './sample2.js'
+import Sample3 from './sample3.js'
 
 let loadSample = (sampleName) => { 
     let samples = document.querySelectorAll('canvas');

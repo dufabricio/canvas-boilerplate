@@ -6,8 +6,11 @@ let sample1 = () => {
 
         const c = canvas.getContext('2d')
 
-        canvas.width = innerWidth
-        canvas.height = innerHeight
+        var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 38.4;
+
+        canvas.width = w;
+        canvas.height = h;
 
         const mouse = {
             x: 10,
@@ -21,8 +24,8 @@ let sample1 = () => {
         })
 
         addEventListener('resize', () => {
-            canvas.width = innerWidth
-            canvas.height = innerHeight
+            canvas.width = w;
+            canvas.height = h;
 
             init()
         })
