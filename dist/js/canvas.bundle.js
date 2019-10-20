@@ -269,11 +269,15 @@ var sample2 = function sample2() {
 
         // Objects
         var Particle = function Particle(x, y, radius, color) {
+            var mass = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+            var material = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "plastic";
+
             this.x = x;
             this.y = y;
             this.radius = radius;
+            this.material = material;
             this.color = color;
-            this.mass = 1;
+            this.mass = mass;
             this.velocity = {
                 x: Math.random() - 0.5,
                 y: Math.random() - 0.5
@@ -347,8 +351,12 @@ var sample2 = function sample2() {
                 otherPaticle.velocity.x = vFinal2.x;
                 otherPaticle.velocity.y = vFinal2.y;
 
-                particle.color = randomColor();
-                otherPaticle.color = randomColor();
+                if (particle.material !== 'iron') {
+                    particle.color = randomColor();
+                };
+                if (otherPaticle.material !== 'iron') {
+                    otherPaticle.color = randomColor();
+                };
             }
         };
 
@@ -369,27 +377,33 @@ var sample2 = function sample2() {
         // Implementation
 
 
+        var createParticle = function createParticle(radius, color, mass, material) {
+            var x = randomIntFromRange(radius, canvas.width - radius);
+            var y = randomIntFromRange(radius, canvas.height - radius);
+
+            for (var j = 0; j < particles.length; j++) {
+                if (getDistance(x, y, particles[j].x, particles[j].y) - radius * 2 < 0) {
+                    x = randomIntFromRange(radius, canvas.width - radius);
+                    y = randomIntFromRange(radius, canvas.height - radius);
+                    j = j - 1;
+                }
+            }
+
+            return new Particle(x, y, radius, color, mass, material);
+        };
+
         var init = function init() {
             particles = [];
 
             for (var i = 0; i < countParticles; i++) {
-
-                var x = randomIntFromRange(radius, canvas.width - radius);
-                var y = randomIntFromRange(radius, canvas.height - radius);
-                var color = randomColor();
-
-                if (i !== 0) {
-                    for (var j = 0; j < particles.length; j++) {
-                        if (getDistance(x, y, particles[j].x, particles[j].y) - radius * 2 < 0) {
-                            x = randomIntFromRange(radius, canvas.width - radius);
-                            y = randomIntFromRange(radius, canvas.height - radius);
-                            j = j - 1;
-                        }
-                    }
-                }
-
-                particles.push(new Particle(x, y, radius, color));
+                particles.push(createParticle(radius, randomColor()));
             }
+
+            // Create Iron Balls
+            particles.push(createParticle(30, 'black', 5, "iron"));
+            particles.push(createParticle(30, 'black', 5, "iron"));
+            particles.push(createParticle(30, 'black', 5, "iron"));
+            particles.push(createParticle(60, 'black', 5, "iron"));
         };
 
         // Animation Loop
@@ -464,8 +478,8 @@ var sample2 = function sample2() {
             this.x += this.velocity.x;
             this.y += this.velocity.y;
         };var particles = void 0;
-        var radius = 10;
-        var countParticles = 100;
+        var radius = 5;
+        var countParticles = 400;
 
         init();
         animate();

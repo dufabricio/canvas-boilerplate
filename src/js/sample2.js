@@ -41,12 +41,13 @@ let sample2 = () => {
         })
 
         // Objects
-        function Particle(x, y, radius, color) {
+        function Particle(x, y, radius, color, mass = 1, material = "plastic") {
             this.x = x
             this.y = y
             this.radius = radius
+            this.material = material
             this.color = color
-            this.mass = 1
+            this.mass = mass
             this.velocity = {
                 x: Math.random() - 0.5,
                 y: Math.random() - 0.5
@@ -145,8 +146,8 @@ let sample2 = () => {
                otherPaticle.velocity.x = vFinal2.x;
                otherPaticle.velocity.y = vFinal2.y;
 
-               particle.color = randomColor();
-               otherPaticle.color = randomColor();
+               if(particle.material !== 'iron') { particle.color = randomColor() };
+               if(otherPaticle.material !== 'iron') { otherPaticle.color = randomColor() };
             }
 
         }
@@ -166,30 +167,36 @@ let sample2 = () => {
 
         // Implementation
         let particles;      
-        let radius = 10;
-        let countParticles = 100;
+        let radius = 5;
+        let countParticles = 400;
+
+        function createParticle(radius, color, mass, material){
+            let x = randomIntFromRange(radius, canvas.width - radius);
+            let y = randomIntFromRange(radius, canvas.height - radius);
+            
+            for(let j = 0; j < particles.length; j++){
+                if(getDistance(x, y,particles[j].x, particles[j].y) - radius * 2 < 0){
+                    x = randomIntFromRange(radius, canvas.width - radius);
+                    y = randomIntFromRange(radius, canvas.height - radius);
+                    j = j-1;                
+                }
+            }
+            
+            return new Particle(x,y,radius,color,mass,material);
+        }
 
         function init() {
             particles = [];
             
             for(let i = 0; i < countParticles; i++){
-                
-              let x = randomIntFromRange(radius, canvas.width - radius);
-              let y = randomIntFromRange(radius, canvas.height - radius);
-              let color = randomColor();
-
-              if(i !== 0){
-                  for(let j = 0; j < particles.length; j++){
-                     if(getDistance(x, y,particles[j].x, particles[j].y) - radius * 2 < 0){
-                        x = randomIntFromRange(radius, canvas.width - radius);
-                        y = randomIntFromRange(radius, canvas.height - radius);
-                        j = j-1;                
-                     }
-                  }
-              }
-
-              particles.push(new Particle(x,y,radius,color));
+              particles.push(createParticle(radius, randomColor()));
             }
+
+            // Create Iron Balls
+            particles.push(createParticle(30, 'black', 5, "iron"));
+            particles.push(createParticle(30, 'black', 5, "iron"));
+            particles.push(createParticle(30, 'black', 5, "iron"));
+            particles.push(createParticle(60, 'black', 5, "iron"));
         }
 
         // Animation Loop
